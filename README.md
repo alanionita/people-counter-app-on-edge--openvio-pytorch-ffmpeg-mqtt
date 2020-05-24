@@ -41,17 +41,17 @@ You will choose a model to use and convert it with the Model Optimizer.
 
 Utilize the classroom workspace, or refer to the relevant instructions for your operating system for this step.
 
-- [Linux/Ubuntu](./linux-setup.md)
-- [Mac](./mac-setup.md)
-- [Windows](./windows-setup.md)
+- [Linux/Ubuntu](./docs/linux-setup.md)
+- [Mac](./docs/mac-setup.md)
+- [Windows](./docs/windows-setup.md)
 
 ### Install Nodejs and its dependencies
 
 Utilize the classroom workspace, or refer to the relevant instructions for your operating system for this step.
 
-- [Linux/Ubuntu](./linux-setup.md)
-- [Mac](./mac-setup.md)
-- [Windows](./windows-setup.md)
+- [Linux/Ubuntu](./docs/linux-setup.md)
+- [Mac](./docs/mac-setup.md)
+- [Windows](./docs/windows-setup.md)
 
 ### Install npm
 
