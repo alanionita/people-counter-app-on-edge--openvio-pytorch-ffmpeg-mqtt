@@ -1,0 +1,7 @@
+version: "3.3"
+services:
+  webserver:
+    build: ./webservice/server
+    command: npm run start
+    ports:
+      - 3001:3001
