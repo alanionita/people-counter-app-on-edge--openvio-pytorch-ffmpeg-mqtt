@@ -2,6 +2,19 @@ version: "3.3"
 services:
   webserver:
     build: ./webservice/server
-    command: npm run start
     ports:
       - 3001:3001
+      - 3002:3002
+    networks: 
+      - project-network
+    command: npm run start
+  webui:
+    build: ./webservice/ui
+    ports:
+      - 3000:3000
+    networks:
+      - project-network 
+    command: npm run dev
+networks:
+  project-network:
+    driver: bridge
