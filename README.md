@@ -4,7 +4,7 @@
 | --------------------- | ----------------- |
 | Programming Language: | Python 3.5 or 3.6 |
 
-![people-counter-python](./images/people-counter-image.png)
+![people-counter-python](./docs/images/people-counter-image.png)
 
 ## What it Does
 
@@ -16,7 +16,7 @@ The counter will use the Inference Engine included in the Intel® Distribution o
 
 You will choose a model to use and convert it with the Model Optimizer.
 
-![architectural diagram](./images/arch_diagram.png)
+![architectural diagram](./docs/images/arch_diagram.png)
 
 ## Requirements
 
