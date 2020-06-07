@@ -5,7 +5,7 @@ services:
     ports:
       - 3001:3001
       - 3002:3002
-    networks: 
+    networks:
       - project-network
     command: npm run start
   webui:
@@ -13,8 +13,17 @@ services:
     ports:
       - 3000:3000
     networks:
-      - project-network 
+      - project-network
     command: npm run dev
+  ffserver:
+    build: ./ffmpeg
+    ports:
+      - "3004:3004"
+    networks:
+      - project-network
+    volumes:
+      - ./resources:/resources
+    # command: ffserver ffmpeg -re -i /resources/Pedestrian_Detect_2_1_1.mp4 http://localhost:3004/feed.ffm
 networks:
   project-network:
     driver: bridge
