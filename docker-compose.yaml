@@ -24,6 +24,15 @@ services:
     volumes:
       - ./resources:/resources
     # command: ffserver ffmpeg -re -i /resources/Pedestrian_Detect_2_1_1.mp4 http://localhost:3004/feed.ffm
+  inferemce:
+    build: ./inference
+    ports:
+      - 3003:3003
+    networks:
+      - project-network
+    # command: model-downloader --print_all
+    command: python "./main.py"
+
 networks:
   project-network:
     driver: bridge

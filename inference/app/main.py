@@ -20,20 +20,17 @@
 """
 
 
+# MQTT server environment variables
 import os
 import sys
 import time
 import socket
 import json
 import cv2
-
 import logging as log
 import paho.mqtt.client as mqtt
-
 from argparse import ArgumentParser
 from inference import Network
-
-# MQTT server environment variables
 HOSTNAME = socket.gethostname()
 IPADDRESS = socket.gethostbyname(HOSTNAME)
 MQTT_HOST = IPADDRESS
@@ -69,9 +66,10 @@ def build_argparser():
 
 
 def connect_mqtt():
-    ### TODO: Connect to the MQTT client ###
-    client = None
-
+    print('host', MQTT_HOST)
+    print('port', MQTT_PORT)
+    client = mqtt.Client()
+    client.connect(MQTT_HOST, MQTT_PORT, MQTT_KEEPALIVE_INTERVAL)
     return client
 
 
@@ -95,26 +93,26 @@ def infer_on_stream(args, client):
 
     ### TODO: Loop until stream is over ###
 
-        ### TODO: Read from the video capture ###
+    ### TODO: Read from the video capture ###
 
-        ### TODO: Pre-process the image as needed ###
+    ### TODO: Pre-process the image as needed ###
 
-        ### TODO: Start asynchronous inference for specified request ###
+    ### TODO: Start asynchronous inference for specified request ###
 
-        ### TODO: Wait for the result ###
+    ### TODO: Wait for the result ###
 
-            ### TODO: Get the results of the inference request ###
+    ### TODO: Get the results of the inference request ###
 
-            ### TODO: Extract any desired stats from the results ###
+    ### TODO: Extract any desired stats from the results ###
 
-            ### TODO: Calculate and send relevant information on ###
-            ### current_count, total_count and duration to the MQTT server ###
-            ### Topic "person": keys of "count" and "total" ###
-            ### Topic "person/duration": key of "duration" ###
+    ### TODO: Calculate and send relevant information on ###
+    ### current_count, total_count and duration to the MQTT server ###
+    ### Topic "person": keys of "count" and "total" ###
+    ### Topic "person/duration": key of "duration" ###
 
-        ### TODO: Send the frame to the FFMPEG server ###
+    ### TODO: Send the frame to the FFMPEG server ###
 
-        ### TODO: Write an output image if `single_image_mode` ###
+    ### TODO: Write an output image if `single_image_mode` ###
 
 
 def main():
@@ -124,11 +122,11 @@ def main():
     :return: None
     """
     # Grab command line args
-    args = build_argparser().parse_args()
+    # args = build_argparser().parse_args()
     # Connect to the MQTT server
     client = connect_mqtt()
     # Perform inference on the input stream
-    infer_on_stream(args, client)
+    # infer_on_stream(args, client)
 
 
 if __name__ == '__main__':
