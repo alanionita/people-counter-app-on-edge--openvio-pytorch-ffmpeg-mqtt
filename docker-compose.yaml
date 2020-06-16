@@ -1,5 +1,14 @@
 version: "3.3"
 services:
+  ffserver:
+    build: ./ffmpeg
+    ports:
+      - "3004:3004"
+    networks:
+      - project-network
+    volumes:
+      - ./resources:/resources  
+    # command: ffserver ffmpeg -re -i /resources/Pedestrian_Detect_2_1_1.mp4 http://localhost:3004/feed.ffm
   webserver:
     build: ./webservice/server
     ports:
@@ -15,23 +24,17 @@ services:
     networks:
       - project-network
     command: npm run dev
-  ffserver:
-    build: ./ffmpeg
-    ports:
-      - "3004:3004"
-    networks:
-      - project-network
-    volumes:
-      - ./resources:/resources
-    # command: ffserver ffmpeg -re -i /resources/Pedestrian_Detect_2_1_1.mp4 http://localhost:3004/feed.ffm
   inferemce:
     build: ./inference
     ports:
       - 3003:3003
     networks:
       - project-network
+    depends_on:
+      - webserver
+    restart: on-failure
     # command: model-downloader --print_all
-    command: python "./main.py"
+    command: ["./wait-for-it.sh", "webserver:3001", "--", "python", "main.py"]
 
 networks:
   project-network:

@@ -21,6 +21,7 @@
 
 
 # MQTT server environment variables
+# from inference import Network
 import os
 import sys
 import time
@@ -30,9 +31,10 @@ import cv2
 import logging as log
 import paho.mqtt.client as mqtt
 from argparse import ArgumentParser
-from inference import Network
-HOSTNAME = socket.gethostname()
-IPADDRESS = socket.gethostbyname(HOSTNAME)
+
+
+# Get hostname 'webserver' since that's the name of the MQTT server
+IPADDRESS = socket.gethostbyname('webserver')
 MQTT_HOST = IPADDRESS
 MQTT_PORT = 3001
 MQTT_KEEPALIVE_INTERVAL = 60
