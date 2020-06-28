@@ -21,6 +21,9 @@
 
 
 # MQTT server environment variables
+
+
+# Get hostname 'webserver' since that's the name of the MQTT server
 from inference import Network
 import os
 import sys
@@ -31,9 +34,6 @@ import cv2
 import logging as log
 import paho.mqtt.client as mqtt
 from argparse import ArgumentParser
-
-
-# Get hostname 'webserver' since that's the name of the MQTT server
 IPADDRESS = socket.gethostbyname('webserver')
 MQTT_HOST = IPADDRESS
 MQTT_PORT = 3001
@@ -91,7 +91,8 @@ def infer_on_stream(args, client):
 
     ### Load the model through `infer_network` ###
     infer_network.load_model(args.model)
-    
+    # Get input shape
+    infer_network.get_input_shape()
     ### TODO: Handle the input stream ###
 
     ### TODO: Loop until stream is over ###

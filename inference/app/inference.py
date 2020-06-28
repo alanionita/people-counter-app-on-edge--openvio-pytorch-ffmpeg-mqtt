@@ -22,8 +22,6 @@
  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
-import os
-import sys
 import logging as log
 from openvino.inference_engine import IENetwork, IECore
 
@@ -39,35 +37,36 @@ class Network:
         self.plugin = IECore()
         return
 
-    def load_model(self, model_xml):
+    def load_model(self, model_path, device_name="CPU"):
         ### Load the model ###
-        
-        model_bin = os.path.splitext(model_xml)[0] + ".bin"
-        network = IENetwork(model=model_xml, weights=model_bin)
-        
+        model_xml = model_path + ".xml"
+        model_bin = model_path + ".bin"
+        self.network = IENetwork(model=model_xml, weights=model_bin)
+
         ### Check for supported layers ###
         supported_layers = self.plugin.query_network(
-            network=network, device_name="CPU")
+            network=self.network, device_name=device_name)
 
         unsupported_layers = [
-            layer for layer in network.layers.keys() if layer not in supported_layers]
+            layer for layer in self.network.layers.keys() if layer not in supported_layers]
         if len(unsupported_layers) != 0:
             print("Unsupported layers found: {}".format(unsupported_layers))
             print("Check whether extensions are available to add to IECore.")
             exit(1)
-        
+
         ### Add any necessary extensions [optional since OpenVINO v.2020] ###
+
         ### Return the loaded inference plugin ###
-        
-        self.plugin.load_network(network, "CPU")
-        
         ### Note: You may need to update the function parameters. ###
+        self.exec_network = self.plugin.load_network(self.network, device_name)
         print("Model loaded!")
         return self.plugin
 
     def get_input_shape(self):
-        ### TODO: Return the shape of the input layer ###
-        return
+        ### Return the shape of the input layer ###
+        input_blob = next(iter(self.network.inputs))
+        print("Input Shape ::: ", self.network.inputs[input_blob].shape )
+        return self.network.inputs[input_blob].shape
 
     def exec_net(self):
         ### TODO: Start an asynchronous request ###
