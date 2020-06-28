@@ -7,7 +7,7 @@ services:
     networks:
       - project-network
     volumes:
-      - ./resources:/resources  
+      - ./resources:/resources
     # command: ffserver ffmpeg -re -i /resources/Pedestrian_Detect_2_1_1.mp4 http://localhost:3004/feed.ffm
   webserver:
     build: ./webservice/server
@@ -25,16 +25,30 @@ services:
       - project-network
     command: npm run dev
   inferemce:
-    build: ./inference
+    build:
+      context: ./inference
+      dockerfile: Dockerfile
     ports:
       - 3003:3003
+    env_file:
+    - .env  
     networks:
       - project-network
     depends_on:
       - webserver
     restart: on-failure
-    # command: model-downloader --print_all
-    command: ["./wait-for-it.sh", "webserver:3001", "--", "python", "main.py"]
+    volumes:
+      - "./inference/wait-for-it.sh:/app/wait-for-it.sh"
+      - "./inference/app/main.py:/app/main.py"
+      - "./inference/app/inference.py:/app/inference.py"
+      - "./inference/run-inference-commands.sh:/app/run-inference-commands.sh"
+    command:
+      [
+        "/app/wait-for-it.sh",
+        "webserver:3001",
+        "--",
+        "/app/run-inference-commands.sh"
+      ]
 
 networks:
   project-network:
