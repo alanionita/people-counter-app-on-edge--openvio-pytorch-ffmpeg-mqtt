@@ -59,20 +59,29 @@ class Network:
         ### Return the loaded inference plugin ###
         ### Note: You may need to update the function parameters. ###
         self.exec_network = self.plugin.load_network(self.network, device_name)
-        print("Model loaded!")
         return self.plugin
 
     def get_input_shape(self):
         ### Return the shape of the input layer ###
         input_blob = next(iter(self.network.inputs))
-        print("Input Shape ::: ", self.network.inputs[input_blob].shape )
         return self.network.inputs[input_blob].shape
 
-    def exec_net(self):
-        ### TODO: Start an asynchronous request ###
-        ### TODO: Return any necessary information ###
+    def exec_net(self, image):
+        ### Start an asynchronous request ###
+        ### Return any necessary information ###
         ### Note: You may need to update the function parameters. ###
-        return
+        input_blob = next(iter(self.network.inputs))
+        infer_request_handle = self.exec_network.start_async(
+            request_id=0, inputs={input_blob: image})
+        infer_status = infer_request_handle.wait()
+        print('Infer status :: ', infer_status)
+        while infer_status:
+            status = self.exec_network.requests[0].wait(-1)
+            if status == 0:
+                break
+            else:
+                status.sleep(1)
+        return self.exec_network    
 
     def wait(self):
         ### TODO: Wait for the request to be complete. ###
