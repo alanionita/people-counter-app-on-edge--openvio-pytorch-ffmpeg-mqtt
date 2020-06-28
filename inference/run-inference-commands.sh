@@ -14,6 +14,6 @@ set_model_path() {
 
 set_model_path
 
-python3 main.py -m $MODEL_PATH/$MODEL_NAME
+python3 main.py -m $MODEL_PATH/$MODEL_NAME -i data/sitting-on-car.jpg
 
 # model-downloader --print_all

@@ -30,8 +30,8 @@ import sys
 import time
 import socket
 import json
-import cv2
 import logging as log
+import cv2
 import paho.mqtt.client as mqtt
 from argparse import ArgumentParser
 IPADDRESS = socket.gethostbyname('webserver')
@@ -49,8 +49,8 @@ def build_argparser():
     parser = ArgumentParser()
     parser.add_argument("-m", "--model", required=True, type=str,
                         help="Path to an xml file with a trained model.")
-    # parser.add_argument("-i", "--input", required=True, type=str,
-    #                     help="Path to image or video file")
+    parser.add_argument("-i", "--input", required=True, type=str,
+                        help="Path to image or video file")
     # parser.add_argument("-l", "--cpu_extension", required=False, type=str,
     #                     default=None,
     #                     help="MKLDNN (CPU)-targeted custom layers."
@@ -75,6 +75,16 @@ def connect_mqtt():
     return client
 
 
+def preprocessing(input_image, input_shape):
+    _, _, h, w = input_shape
+    image = cv2.imread(input_image)
+    image = cv2.resize(image, (w, h))
+    image = image.transpose((2, 0, 1))
+    image = image.reshape(1, 3, h, w)
+    print('Preprocesing complete!')
+    return image
+
+
 def infer_on_stream(args, client):
     """
     Initialize the inference network, stream video to network,
@@ -92,17 +102,21 @@ def infer_on_stream(args, client):
     ### Load the model through `infer_network` ###
     infer_network.load_model(args.model)
     # Get input shape
-    infer_network.get_input_shape()
+    input_shape = infer_network.get_input_shape()
+    
     ### TODO: Handle the input stream ###
 
     ### TODO: Loop until stream is over ###
 
     ### TODO: Read from the video capture ###
 
-    ### TODO: Pre-process the image as needed ###
-
-    ### TODO: Start asynchronous inference for specified request ###
-
+    ### Pre-process the image as needed ###
+    preprocessed_image = preprocessing(args.input, input_shape)
+    ### Start asynchronous inference for specified request ###
+    infer_network.exec_net(preprocessed_image)
+    output_blob = next(iter(infer_network.exec_network.outputs))
+    
+    print('Inference output blob :: ', output_blob)
     ### TODO: Wait for the result ###
 
     ### TODO: Get the results of the inference request ###
