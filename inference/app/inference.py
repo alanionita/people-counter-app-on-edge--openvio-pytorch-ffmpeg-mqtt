@@ -35,17 +35,17 @@ class Network:
     """
 
     def __init__(self):
-        ### TODO: Initialize any class variables desired ###
+        ### Initialize any class variables desired ###
         self.plugin = IECore()
         return
 
     def load_model(self, model_xml):
-        ### TODO: Load the model ###
+        ### Load the model ###
         
         model_bin = os.path.splitext(model_xml)[0] + ".bin"
         network = IENetwork(model=model_xml, weights=model_bin)
         
-        ### TODO: Check for supported layers ###
+        ### Check for supported layers ###
         supported_layers = self.plugin.query_network(
             network=network, device_name="CPU")
 
@@ -56,8 +56,8 @@ class Network:
             print("Check whether extensions are available to add to IECore.")
             exit(1)
         
-        ### TODO: Add any necessary extensions ###
-        ### TODO: Return the loaded inference plugin ###
+        ### Add any necessary extensions [optional since OpenVINO v.2020] ###
+        ### Return the loaded inference plugin ###
         
         self.plugin.load_network(network, "CPU")
         
