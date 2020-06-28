@@ -35,6 +35,9 @@ class Network:
     def __init__(self):
         ### Initialize any class variables desired ###
         self.plugin = IECore()
+        self.network = None
+        self.exec_network = None
+        self.input_blob = None
         return
 
     def load_model(self, model_path, device_name="CPU"):
@@ -51,11 +54,7 @@ class Network:
             layer for layer in self.network.layers.keys() if layer not in supported_layers]
         if len(unsupported_layers) != 0:
             print("Unsupported layers found: {}".format(unsupported_layers))
-            print("Check whether extensions are available to add to IECore.")
             exit(1)
-
-        ### Add any necessary extensions [optional since OpenVINO v.2020] ###
-
         ### Return the loaded inference plugin ###
         ### Note: You may need to update the function parameters. ###
         self.exec_network = self.plugin.load_network(self.network, device_name)
@@ -63,33 +62,26 @@ class Network:
 
     def get_input_shape(self):
         ### Return the shape of the input layer ###
-        input_blob = next(iter(self.network.inputs))
-        return self.network.inputs[input_blob].shape
+        self.input_blob = next(iter(self.network.inputs))
+        return self.network.inputs[self.input_blob].shape
 
-    def exec_net(self, image):
+    def exec_net(self, image, request_no):
         ### Start an asynchronous request ###
         ### Return any necessary information ###
         ### Note: You may need to update the function parameters. ###
-        input_blob = next(iter(self.network.inputs))
-        infer_request_handle = self.exec_network.start_async(
-            request_id=0, inputs={input_blob: image})
-        infer_status = infer_request_handle.wait()
-        print('Infer status :: ', infer_status)
-        while infer_status:
-            status = self.exec_network.requests[0].wait(-1)
-            if status == 0:
-                break
-            else:
-                status.sleep(1)
-        return self.exec_network    
-
-    def wait(self):
-        ### TODO: Wait for the request to be complete. ###
-        ### TODO: Return any necessary information ###
+        self.exec_network.start_async(
+            request_id=request_no, inputs={self.input_blob: image})
+        return 
+    
+    def wait(self, request_no):
+        ### Wait for the request to be complete. ###
+        ### Return any necessary information ###
         ### Note: You may need to update the function parameters. ###
-        return
+        status = self.exec_network.requests[request_no].wait(-1)
+        return status
 
-    def get_output(self):
-        # TODO: Extract and return the output results
+    def get_output(self, request_no):
+        # Extract and return the output results
         ### Note: You may need to update the function parameters. ###
-        return
+        output_blob = next(iter(self.network.outputs))
+        return self.exec_network.requests[request_no].outputs[output_blob]

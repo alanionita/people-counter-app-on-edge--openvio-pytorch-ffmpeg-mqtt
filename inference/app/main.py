@@ -113,14 +113,17 @@ def infer_on_stream(args, client):
     ### Pre-process the image as needed ###
     preprocessed_image = preprocessing(args.input, input_shape)
     ### Start asynchronous inference for specified request ###
-    infer_network.exec_net(preprocessed_image)
-    output_blob = next(iter(infer_network.exec_network.outputs))
-    
-    print('Inference output blob :: ', output_blob)
-    ### TODO: Wait for the result ###
-
-    ### TODO: Get the results of the inference request ###
-
+    infer_network.exec_net(preprocessed_image, 0)
+        
+    ### Wait for the result ###
+    # Paramater is request number not wait time
+    status = infer_network.wait(0)
+            
+    ### Get the results of the inference request ###
+    if status == 0:
+        output_shape = infer_network.get_output(0)
+        print('Inference output shape :: ', output_shape)   
+        
     ### TODO: Extract any desired stats from the results ###
 
     ### TODO: Calculate and send relevant information on ###
