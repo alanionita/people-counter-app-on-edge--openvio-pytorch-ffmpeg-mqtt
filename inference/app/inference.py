@@ -36,15 +36,34 @@ class Network:
 
     def __init__(self):
         ### TODO: Initialize any class variables desired ###
+        self.plugin = IECore()
         return
 
-    def load_model(self):
+    def load_model(self, model_xml):
         ### TODO: Load the model ###
+        
+        model_bin = os.path.splitext(model_xml)[0] + ".bin"
+        network = IENetwork(model=model_xml, weights=model_bin)
+        
         ### TODO: Check for supported layers ###
+        supported_layers = self.plugin.query_network(
+            network=network, device_name="CPU")
+
+        unsupported_layers = [
+            layer for layer in network.layers.keys() if layer not in supported_layers]
+        if len(unsupported_layers) != 0:
+            print("Unsupported layers found: {}".format(unsupported_layers))
+            print("Check whether extensions are available to add to IECore.")
+            exit(1)
+        
         ### TODO: Add any necessary extensions ###
         ### TODO: Return the loaded inference plugin ###
+        
+        self.plugin.load_network(network, "CPU")
+        
         ### Note: You may need to update the function parameters. ###
-        return
+        print("Model loaded!")
+        return self.plugin
 
     def get_input_shape(self):
         ### TODO: Return the shape of the input layer ###
@@ -63,6 +82,6 @@ class Network:
         return
 
     def get_output(self):
-        ### TODO: Extract and return the output results
+        # TODO: Extract and return the output results
         ### Note: You may need to update the function parameters. ###
         return

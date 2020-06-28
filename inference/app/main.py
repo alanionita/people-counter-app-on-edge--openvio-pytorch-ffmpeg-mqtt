@@ -21,7 +21,7 @@
 
 
 # MQTT server environment variables
-# from inference import Network
+from inference import Network
 import os
 import sys
 import time
@@ -49,21 +49,21 @@ def build_argparser():
     parser = ArgumentParser()
     parser.add_argument("-m", "--model", required=True, type=str,
                         help="Path to an xml file with a trained model.")
-    parser.add_argument("-i", "--input", required=True, type=str,
-                        help="Path to image or video file")
-    parser.add_argument("-l", "--cpu_extension", required=False, type=str,
-                        default=None,
-                        help="MKLDNN (CPU)-targeted custom layers."
-                             "Absolute path to a shared library with the"
-                             "kernels impl.")
-    parser.add_argument("-d", "--device", type=str, default="CPU",
-                        help="Specify the target device to infer on: "
-                             "CPU, GPU, FPGA or MYRIAD is acceptable. Sample "
-                             "will look for a suitable plugin for device "
-                             "specified (CPU by default)")
-    parser.add_argument("-pt", "--prob_threshold", type=float, default=0.5,
-                        help="Probability threshold for detections filtering"
-                        "(0.5 by default)")
+    # parser.add_argument("-i", "--input", required=True, type=str,
+    #                     help="Path to image or video file")
+    # parser.add_argument("-l", "--cpu_extension", required=False, type=str,
+    #                     default=None,
+    #                     help="MKLDNN (CPU)-targeted custom layers."
+    #                          "Absolute path to a shared library with the"
+    #                          "kernels impl.")
+    # parser.add_argument("-d", "--device", type=str, default="CPU",
+    #                     help="Specify the target device to infer on: "
+    #                          "CPU, GPU, FPGA or MYRIAD is acceptable. Sample "
+    #                          "will look for a suitable plugin for device "
+    #                          "specified (CPU by default)")
+    # parser.add_argument("-pt", "--prob_threshold", type=float, default=0.5,
+    #                     help="Probability threshold for detections filtering"
+    #                     "(0.5 by default)")
     return parser
 
 
@@ -87,10 +87,10 @@ def infer_on_stream(args, client):
     # Initialise the class
     infer_network = Network()
     # Set Probability threshold for detections
-    prob_threshold = args.prob_threshold
+    # prob_threshold = args.prob_threshold
 
     ### TODO: Load the model through `infer_network` ###
-
+    infer_network.load_model(args.model)
     ### TODO: Handle the input stream ###
 
     ### TODO: Loop until stream is over ###
@@ -124,11 +124,11 @@ def main():
     :return: None
     """
     # Grab command line args
-    # args = build_argparser().parse_args()
+    args = build_argparser().parse_args()
     # Connect to the MQTT server
     client = connect_mqtt()
     # Perform inference on the input stream
-    # infer_on_stream(args, client)
+    infer_on_stream(args, client)
 
 
 if __name__ == '__main__':
