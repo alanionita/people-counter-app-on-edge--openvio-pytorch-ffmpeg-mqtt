@@ -1,14 +1,21 @@
 version: "3.3"
 services:
   ffserver:
-    build: ./ffmpeg
+    build: ./ffserver
+    restart: always
+    expose:
+      - "3004"
+    volumes:
+      - ./resources:/resources
     ports:
       - "3004:3004"
     networks:
-      - project-network
-    volumes:
-      - ./resources:/resources
-    # command: ffserver ffmpeg -re -i /resources/Pedestrian_Detect_2_1_1.mp4 http://localhost:3004/feed.ffm
+      - project-network  
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://ffserver:3004/stat.html --max-time 1 --output /dev/null || exit 1"]
+      interval: 15s
+      timeout: 1s
+      retries: 3
   webserver:
     build: ./webservice/server
     ports:
@@ -23,15 +30,19 @@ services:
       - 3000:3000
     networks:
       - project-network
+    depends_on:
+      - webserver
+      - ffserver
     command: npm run dev
+    env_file: ./webservice/ui/.env
+      
   inferemce:
     build:
       context: ./inference
       dockerfile: Dockerfile
     ports:
       - 3003:3003
-    env_file:
-    - .env  
+    env_file: ./inference/.env
     networks:
       - project-network
     depends_on:
@@ -48,7 +59,7 @@ services:
         "/app/wait-for-it.sh",
         "webserver:3001",
         "--",
-        "/app/run-inference-commands.sh"
+        "/app/run-inference-commands.sh",
       ]
 
 networks:
