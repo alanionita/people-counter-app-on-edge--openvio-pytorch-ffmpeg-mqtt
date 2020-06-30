@@ -1,0 +1,20 @@
+{
+  "name": "people-counter-app-on-edge--openvio-pytorch-ffmpeg-mqtt",
+  "version": "1.0.0",
+  "description": "A people counter system using OpenVINO for inference, ffmpeg, MQTT, NodeJS, and React",
+  "main": "index.js",
+  "scripts": {
+    "docker-start": "docker-compose build; docker-compose up"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alanionita/people-counter-app-on-edge--openvio-pytorch-ffmpeg-mqtt.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alanionita/people-counter-app-on-edge--openvio-pytorch-ffmpeg-mqtt/issues"
+  },
+  "homepage": "https://github.com/alanionita/people-counter-app-on-edge--openvio-pytorch-ffmpeg-mqtt#readme"
+}

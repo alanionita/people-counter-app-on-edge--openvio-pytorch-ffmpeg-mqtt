@@ -17,7 +17,7 @@ services:
       timeout: 1s
       retries: 3
   webserver:
-    build: ./webservice/server
+    build: ./webserver
     ports:
       - 3001:3001
       - 3002:3002
@@ -25,7 +25,7 @@ services:
       - project-network
     command: npm run start
   webui:
-    build: ./webservice/ui
+    build: ./webui
     ports:
       - 3000:3000
     networks:
@@ -34,7 +34,7 @@ services:
       - webserver
       - ffserver
     command: npm run dev
-    env_file: ./webservice/ui/.env
+    env_file: ./webui/.env
       
   inferemce:
     build:

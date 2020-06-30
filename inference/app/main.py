@@ -123,7 +123,8 @@ def infer_on_stream(args, client):
     if status == 0:
         output_shape = infer_network.get_output(0)
         print('Inference output shape :: ', output_shape)   
-        
+    ### FIXME: only used for logging    
+    client.publish("person", json.dumps({"total": 299, "count": 99}))    
     ### TODO: Extract any desired stats from the results ###
 
     ### TODO: Calculate and send relevant information on ###
@@ -146,6 +147,7 @@ def main():
     args = build_argparser().parse_args()
     # Connect to the MQTT server
     client = connect_mqtt()
+    
     # Perform inference on the input stream
     infer_on_stream(args, client)
 

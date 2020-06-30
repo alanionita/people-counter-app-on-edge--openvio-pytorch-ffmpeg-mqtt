@@ -22,7 +22,6 @@ class MqttClient {
 
     // listen for mqtt messages
     this.client.on( "message", ( topic, message ) => {
-      /*console.log( topic, message );*/
       let m = JSON.parse( message.toString() );
       // call all registered handlers
       this.handlers.forEach( ( h ) => {

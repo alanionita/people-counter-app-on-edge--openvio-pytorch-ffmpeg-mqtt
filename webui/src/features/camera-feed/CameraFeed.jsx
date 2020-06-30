@@ -8,7 +8,6 @@ class CameraFeed extends React.Component {
     this.mjpgSrc = HTTP.CAMERA_FEED;
     this.refreshImage = this.refreshImage.bind( this );
     this.mjpgSrc = HTTP.CAMERA_FEED;
-
     this.state = {
       mjpgSrc: this.mjpgSrc,
     };

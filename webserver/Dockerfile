@@ -5,5 +5,5 @@ WORKDIR /webserver
 COPY package*.json ./
 RUN npm install
 COPY . .
-EXPOSE 3001:3001
-EXPOSE 3002:3002
+EXPOSE 3001
+EXPOSE 3002
