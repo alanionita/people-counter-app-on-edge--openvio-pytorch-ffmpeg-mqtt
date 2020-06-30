@@ -1,4 +1,4 @@
-FROM node:current-alpine3.10
+FROM node:12-stretch-slim
 
 RUN mkdir webui
 WORKDIR /webui
@@ -7,4 +7,3 @@ RUN npm install
 COPY . .
 
 EXPOSE 3000
-

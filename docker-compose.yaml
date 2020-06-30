@@ -8,9 +8,13 @@ services:
     ports:
       - "3004:3004"
     networks:
-      - project-network  
+      - project-network
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://ffserver:3004/stat.html --max-time 1 --output /dev/null || exit 1"]
+      test:
+        [
+          "CMD-SHELL",
+          "curl -f http://ffserver:3004/stat.html --max-time 1 --output /dev/null || exit 1",
+        ]
       interval: 15s
       timeout: 1s
       retries: 3
@@ -28,11 +32,13 @@ services:
       - 3000:3000
     networks:
       - project-network
+    volumes:
+      - "./utils/wait-for-it.sh:/webui/wait-for-it.sh"
     depends_on:
       - webserver
       - ffserver
-    command: npm run dev
-    env_file: ./webui/.env 
+    command: bash -c "/webui/wait-for-it.sh webserver:3001 && npm run dev"
+    env_file: ./webui/.env
   inferemce:
     build:
       context: ./inference
