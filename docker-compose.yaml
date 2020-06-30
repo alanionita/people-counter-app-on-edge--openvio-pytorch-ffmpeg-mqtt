@@ -5,8 +5,6 @@ services:
     restart: always
     expose:
       - "3004"
-    volumes:
-      - ./resources:/resources
     ports:
       - "3004:3004"
     networks:
@@ -34,8 +32,7 @@ services:
       - webserver
       - ffserver
     command: npm run dev
-    env_file: ./webui/.env
-      
+    env_file: ./webui/.env 
   inferemce:
     build:
       context: ./inference
@@ -49,11 +46,11 @@ services:
       - webserver
     restart: on-failure
     volumes:
-      - "./inference/wait-for-it.sh:/app/wait-for-it.sh"
+      - "./utils/wait-for-it.sh:/app/wait-for-it.sh"
       - "./inference/app/main.py:/app/main.py"
       - "./inference/app/inference.py:/app/inference.py"
-      - "./inference/data:/app/data"
       - "./inference/run-inference-commands.sh:/app/run-inference-commands.sh"
+      - "./data:/app/data"
     command:
       [
         "/app/wait-for-it.sh",
