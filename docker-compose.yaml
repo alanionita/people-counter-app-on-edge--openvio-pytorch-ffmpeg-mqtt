@@ -53,9 +53,6 @@ services:
     restart: on-failure
     volumes:
       - "./utils/wait-for-it.sh:/app/wait-for-it.sh"
-      - "./inference/app/main.py:/app/main.py"
-      - "./inference/app/inference.py:/app/inference.py"
-      - "./inference/run-inference-commands.sh:/app/run-inference-commands.sh"
       - "./data:/app/data"
     command:
       [

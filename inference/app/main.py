@@ -20,69 +20,17 @@
 """
 
 
-# MQTT server environment variables
 
 
-# Get hostname 'webserver' since that's the name of the MQTT server
-from inference import Network
 import os
 import sys
 import time
-import socket
 import json
 import logging as log
-import cv2
-import paho.mqtt.client as mqtt
-from argparse import ArgumentParser
-IPADDRESS = socket.gethostbyname('webserver')
-MQTT_HOST = IPADDRESS
-MQTT_PORT = 3001
-MQTT_KEEPALIVE_INTERVAL = 60
-
-
-def build_argparser():
-    """
-    Parse command line arguments.
-
-    :return: command line arguments
-    """
-    parser = ArgumentParser()
-    parser.add_argument("-m", "--model", required=True, type=str,
-                        help="Path to an xml file with a trained model.")
-    parser.add_argument("-i", "--input", required=True, type=str,
-                        help="Path to image or video file")
-    # parser.add_argument("-l", "--cpu_extension", required=False, type=str,
-    #                     default=None,
-    #                     help="MKLDNN (CPU)-targeted custom layers."
-    #                          "Absolute path to a shared library with the"
-    #                          "kernels impl.")
-    # parser.add_argument("-d", "--device", type=str, default="CPU",
-    #                     help="Specify the target device to infer on: "
-    #                          "CPU, GPU, FPGA or MYRIAD is acceptable. Sample "
-    #                          "will look for a suitable plugin for device "
-    #                          "specified (CPU by default)")
-    # parser.add_argument("-pt", "--prob_threshold", type=float, default=0.5,
-    #                     help="Probability threshold for detections filtering"
-    #                     "(0.5 by default)")
-    return parser
-
-
-def connect_mqtt():
-    print('host', MQTT_HOST)
-    print('port', MQTT_PORT)
-    client = mqtt.Client()
-    client.connect(MQTT_HOST, MQTT_PORT, MQTT_KEEPALIVE_INTERVAL)
-    return client
-
-
-def preprocessing(input_image, input_shape):
-    _, _, h, w = input_shape
-    image = cv2.imread(input_image)
-    image = cv2.resize(image, (w, h))
-    image = image.transpose((2, 0, 1))
-    image = image.reshape(1, 3, h, w)
-    print('Preprocesing complete!')
-    return image
+from inference import Network
+from mqtt_service import connect_mqtt
+from argparser_service import build_argparser
+from processing_service import preprocessing
 
 
 def infer_on_stream(args, client):
@@ -103,7 +51,7 @@ def infer_on_stream(args, client):
     infer_network.load_model(args.model)
     # Get input shape
     input_shape = infer_network.get_input_shape()
-    
+
     ### TODO: Handle the input stream ###
 
     ### TODO: Loop until stream is over ###
@@ -114,17 +62,15 @@ def infer_on_stream(args, client):
     preprocessed_image = preprocessing(args.input, input_shape)
     ### Start asynchronous inference for specified request ###
     infer_network.exec_net(preprocessed_image, 0)
-        
+
     ### Wait for the result ###
     # Paramater is request number not wait time
     status = infer_network.wait(0)
-            
+
     ### Get the results of the inference request ###
     if status == 0:
         output_shape = infer_network.get_output(0)
-        print('Inference output shape :: ', output_shape)   
-    ### FIXME: only used for logging    
-    client.publish("person", json.dumps({"total": 299, "count": 99}))    
+        print('Inference output shape :: ', output_shape)
     ### TODO: Extract any desired stats from the results ###
 
     ### TODO: Calculate and send relevant information on ###
@@ -147,7 +93,7 @@ def main():
     args = build_argparser().parse_args()
     # Connect to the MQTT server
     client = connect_mqtt()
-    
+
     # Perform inference on the input stream
     infer_on_stream(args, client)
 
