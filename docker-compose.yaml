@@ -40,9 +40,7 @@ services:
     command: bash -c "/webui/wait-for-it.sh webserver:3001 && npm run dev"
     env_file: ./webui/.env
   inferemce:
-    build:
-      context: ./inference
-      dockerfile: Dockerfile
+    build: ./inference
     ports:
       - 3003:3003
     env_file: ./inference/.env
@@ -53,6 +51,7 @@ services:
     restart: on-failure
     volumes:
       - "./utils/wait-for-it.sh:/app/wait-for-it.sh"
+      - "./out:/app/out"
       - "./data:/app/data"
     command:
       [
