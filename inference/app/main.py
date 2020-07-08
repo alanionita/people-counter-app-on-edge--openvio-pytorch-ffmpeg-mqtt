@@ -25,13 +25,41 @@
 import os
 import sys
 import time
+import socket
 import json
+from cv2 import VideoCapture, VideoWriter, waitKey, imwrite, destroyAllWindows
+
 import logging as log
+from argparse import ArgumentParser
 from inference import Network
 from mqtt_service import connect_mqtt
-from argparser_service import build_argparser
-from processing_service import preprocessing
+from processing_service import preprocessing, draw_boxes
 
+def build_argparser():
+    """
+    Parse command line arguments.
+
+    :return: command line arguments
+    """
+    parser = ArgumentParser()
+    parser.add_argument("-m", "--model", required=True, type=str,
+                        help="Path to an xml file with a trained model.")
+    parser.add_argument("-i", "--input", required=True, type=str,
+                        help="Path to image or video file")
+    # parser.add_argument("-l", "--cpu_extension", required=False, type=str,
+    #                     default=None,
+    #                     help="MKLDNN (CPU)-targeted custom layers."
+    #                          "Absolute path to a shared library with the"
+    #                          "kernels impl.")
+    # parser.add_argument("-d", "--device", type=str, default="CPU",
+    #                     help="Specify the target device to infer on: "
+    #                          "CPU, GPU, FPGA or MYRIAD is acceptable. Sample "
+    #                          "will look for a suitable plugin for device "
+    #                          "specified (CPU by default)")
+    # parser.add_argument("-pt", "--prob_threshold", type=float, default=0.5,
+    #                     help="Probability threshold for detections filtering"
+    #                     "(0.5 by default)")
+    return parser
 
 def infer_on_stream(args, client):
     """
@@ -53,34 +81,54 @@ def infer_on_stream(args, client):
     input_shape = infer_network.get_input_shape()
 
     ### TODO: Handle the input stream ###
+    input_stream = VideoCapture(args.i)
+    input_stream.open(args.i)
 
+    # FIXME: Grab the shape of the input (why?)
+    width = int(input_stream.get(3))
+    height = int(input_stream.get(4))
+    out = VideoWriter('./out/out.mp4', 0x00000021, 30, (width, height))
     ### TODO: Loop until stream is over ###
+    while input_stream.isOpened():
 
-    ### TODO: Read from the video capture ###
+        ### TODO: Read from the video capture ###
+        flag, frame = input_stream.read()
+        if not flag:
+            break
+        key_pressed = waitKey(60)
+        ### Pre-process the image as needed ###
+        preprocessed_frame = preprocessing(frame, input_shape)
+        ### Start asynchronous inference for specified request ###
+        infer_network.exec_net(preprocessed_frame, 0)
 
-    ### Pre-process the image as needed ###
-    preprocessed_image = preprocessing(args.input, input_shape)
-    ### Start asynchronous inference for specified request ###
-    infer_network.exec_net(preprocessed_image, 0)
+        ### Wait for the result ###
+        # Paramater is request number not wait time
+        status = infer_network.wait(0)
 
-    ### Wait for the result ###
-    # Paramater is request number not wait time
-    status = infer_network.wait(0)
+        ### Get the results of the inference request ###
+        if status == 0:
+            output_shape = infer_network.get_output(0)
+            frame = draw_boxes(frame, output_shape, args, width, height)
+            print('Inference output shape :: ', output_shape)
+        ### TODO: Extract any desired stats from the results ###
 
-    ### Get the results of the inference request ###
-    if status == 0:
-        output_shape = infer_network.get_output(0)
-        print('Inference output shape :: ', output_shape)
-    ### TODO: Extract any desired stats from the results ###
+        ### TODO: Calculate and send relevant information on ###
+        ### current_count, total_count and duration to the MQTT server ###
+        ### Topic "person": keys of "count" and "total" ###
+        ### Topic "person/duration": key of "duration" ###
 
-    ### TODO: Calculate and send relevant information on ###
-    ### current_count, total_count and duration to the MQTT server ###
-    ### Topic "person": keys of "count" and "total" ###
-    ### Topic "person/duration": key of "duration" ###
+        ### TODO: Send the frame to the FFMPEG server ###
+        imwrite('out/output.png', frame)
 
-    ### TODO: Send the frame to the FFMPEG server ###
+        ### TODO: Write an output image if `single_image_mode` ###
 
-    ### TODO: Write an output image if `single_image_mode` ###
+    # Break if escape key pressed
+        if key_pressed == 27:
+            break
+    # Release the out writer, capture, and destroy any OpenCV windows
+    out.release()
+    input_stream.release()
+    destroyAllWindows()
 
 
 def main():
@@ -90,12 +138,12 @@ def main():
     :return: None
     """
     # Grab command line args
-    args = build_argparser().parse_args()
+    args = build_argparser()
     # Connect to the MQTT server
     client = connect_mqtt()
-
+    print('args ::::', args)
     # Perform inference on the input stream
-    infer_on_stream(args, client)
+    # infer_on_stream(args, client)
 
 
 if __name__ == '__main__':
