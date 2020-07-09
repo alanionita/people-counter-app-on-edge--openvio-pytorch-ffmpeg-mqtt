@@ -28,13 +28,11 @@ import time
 import socket
 import json
 from cv2 import VideoCapture, VideoWriter, waitKey, imwrite, destroyAllWindows
-
 import logging as log
 from argparse import ArgumentParser
 from inference import Network
 from mqtt_service import connect_mqtt
 from processing_service import preprocessing, draw_boxes
-
 def build_argparser():
     """
     Parse command line arguments.
@@ -61,6 +59,7 @@ def build_argparser():
     #                     "(0.5 by default)")
     return parser
 
+
 def infer_on_stream(args, client):
     """
     Initialize the inference network, stream video to network,
@@ -76,13 +75,14 @@ def infer_on_stream(args, client):
     # prob_threshold = args.prob_threshold
 
     ### Load the model through `infer_network` ###
+    print('args', args)
     infer_network.load_model(args.model)
     # Get input shape
     input_shape = infer_network.get_input_shape()
 
     ### TODO: Handle the input stream ###
-    input_stream = VideoCapture(args.i)
-    input_stream.open(args.i)
+    input_stream = VideoCapture(args.input)
+    input_stream.open(args.input)
 
     # FIXME: Grab the shape of the input (why?)
     width = int(input_stream.get(3))
@@ -138,12 +138,11 @@ def main():
     :return: None
     """
     # Grab command line args
-    args = build_argparser()
+    args = build_argparser().parse_args()
     # Connect to the MQTT server
     client = connect_mqtt()
-    print('args ::::', args)
     # Perform inference on the input stream
-    # infer_on_stream(args, client)
+    infer_on_stream(args, client)
 
 
 if __name__ == '__main__':
