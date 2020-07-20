@@ -27,7 +27,7 @@ import sys
 import time
 import socket
 import json
-from cv2 import VideoCapture, VideoWriter, waitKey, imwrite, destroyAllWindows
+from cv2 import VideoCapture, VideoWriter, VideoWriter_fourcc, waitKey, imwrite, destroyAllWindows
 import logging as log
 from argparse import ArgumentParser
 from inference import Network
@@ -75,27 +75,29 @@ def infer_on_stream(args, client):
     # prob_threshold = args.prob_threshold
 
     ### Load the model through `infer_network` ###
-    print('args', args)
     infer_network.load_model(args.model)
     # Get input shape
     input_shape = infer_network.get_input_shape()
 
-    ### TODO: Handle the input stream ###
+    ### Handle the input stream ###
     input_stream = VideoCapture(args.input)
     input_stream.open(args.input)
 
     # FIXME: Grab the shape of the input (why?)
     width = int(input_stream.get(3))
     height = int(input_stream.get(4))
-    out = VideoWriter('./out/out.mp4', 0x00000021, 30, (width, height))
-    ### TODO: Loop until stream is over ###
-    while input_stream.isOpened():
 
-        ### TODO: Read from the video capture ###
+    # Set out fourcc and out stream
+    fourcc = VideoWriter_fourcc(*"mp4v")
+    out = VideoWriter('./out/out.mp4', fourcc, 30, (width, height))
+    ### Loop until stream is over ###
+    while input_stream.isOpened():
+        ### Read from the video capture ###
         flag, frame = input_stream.read()
         if not flag:
             break
         key_pressed = waitKey(60)
+        print('frame', frame)
         ### Pre-process the image as needed ###
         preprocessed_frame = preprocessing(frame, input_shape)
         ### Start asynchronous inference for specified request ###
@@ -108,7 +110,10 @@ def infer_on_stream(args, client):
         ### Get the results of the inference request ###
         if status == 0:
             output_shape = infer_network.get_output(0)
-            frame = draw_boxes(frame, output_shape, args, width, height)
+            print('output_shape ::::', output_shape)
+            drawn_frame = draw_boxes(preprocessed_frame,
+                                     output_shape, args, width, height)
+            out.write(drawn_frame)
             print('Inference output shape :: ', output_shape)
         ### TODO: Extract any desired stats from the results ###
 

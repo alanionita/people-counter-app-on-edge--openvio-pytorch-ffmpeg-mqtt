@@ -3,8 +3,7 @@ from cv2 import rectangle, imread, resize
 
 def preprocessing(input_image, input_shape):
     _, _, h, w = input_shape
-    image = imread(input_image)
-    image = resize(image, (w, h))
+    image = resize(input_image, (w, h))
     image = image.transpose((2, 0, 1))
     image = image.reshape(1, *image.shape)
     print('Preprocesing complete!')
@@ -12,7 +11,9 @@ def preprocessing(input_image, input_shape):
 
 
 def draw_boxes(frame, result, args, width, height):
+    print('result ::: ', result)
     for box in result[0][0]:  # Output shape is 1x1x100x7
+        print('box ::: ', box)
         conf = box[2]
         if conf >= 0.5:
             xmin = int(box[3] * width)
