@@ -7,10 +7,8 @@ USER root
 # ========================
 
 # Constants
-ARG INSTALL_DIR=/opt/intel/openvino
-
 ENV OPENVINO_DIR="/opt/intel/openvino"
-ENV MODEL_OP_PATH="/usr/share/openvino/model-optimizer/mo.py"
+ENV MODEL_OP_PATH="/opt/intel/openvino/deployment_tools/model_optimizer"
 ENV MODEL_DL_PATH="/opt/intel/openvino/deployment_tools/tools/model_downloader"
 ENV DEPLOYMENT_MANAGER_PATH="/opt/intel/openvino/deployment_tools/tools/deployment_manager"
 ENV MODEL_DIR="/models"
@@ -27,7 +25,10 @@ WORKDIR /app
 # ================================
 
 # Install ffmpeg which is a cv2 dependency
+RUN apt-get -y update
+RUN apt-get -y upgrade
 RUN apt-get -y install ffmpeg
+RUN apt-get -y install wget
 COPY ./requirements.txt ./requirements.txt
 RUN pip3 install -r ./requirements.txt
 
@@ -39,8 +40,9 @@ RUN pip3 install -r ./requirements.txt
 COPY ./models.txt /app
 
 # Download the model
-RUN python3 $MODEL_DL_PATH/downloader.py --name $MODEL_NAME -o $MODEL_DIR --precisions $MODEL_PRECISION;
-
+# RUN python3 $MODEL_DL_PATH/downloader.py --name $MODEL_NAME -o $MODEL_DIR --precisions $MODEL_PRECISION;
+COPY ./download-model.sh /app/download-model.sh
+RUN /app/download-model.sh
 
 # ========================
 # OpenVINO APP - Setup
