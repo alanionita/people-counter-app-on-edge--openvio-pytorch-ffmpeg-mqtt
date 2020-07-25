@@ -114,6 +114,7 @@ def infer_on_stream(args, client):
         ### Get the results of the inference request ###
         if status == 0:
             output_shape = infer_network.get_output(0)
+            print('output_shape ::::', output_shape)
             drawn_frame = draw_boxes(frame,
                                      output_shape, args, width, height)
             out.write(drawn_frame)
