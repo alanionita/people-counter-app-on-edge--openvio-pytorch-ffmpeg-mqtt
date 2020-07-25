@@ -73,10 +73,10 @@ def infer_on_stream(args, client):
     infer_network = Network()
     # Set Probability threshold for detections
     # prob_threshold = args.prob_threshold
-    
+
     ### Load the model through `infer_network` ###
     infer_network.load_model(args.model)
-    
+
     # Get input shape
     input_shape = infer_network.get_input_shape()
 
@@ -84,29 +84,32 @@ def infer_on_stream(args, client):
     input_stream = VideoCapture(args.input)
     input_stream.open(args.input)
 
-    # FIXME: Grab the shape of the input (why?)
+    # Out stream setup
+    fourcc = VideoWriter_fourcc(*'mp4v')
+    frames = 60
+    # Grab the shape of the input, since it's requiered for cv.VideoWriter
+    # without using it cv gets a buffer size error and crashes
     width = int(input_stream.get(3))
     height = int(input_stream.get(4))
-
-    # Set out fourcc and out stream
-    fourcc = VideoWriter_fourcc(*"mp4v")
-    out = VideoWriter('./out/out.mp4', fourcc, 30, (width, height))
+    
+    out = VideoWriter(
+        '/app/out/out.mp4', fourcc, frames, (width, height))
     
     ### Loop until stream is over ###
     while input_stream.isOpened():
-        
+
         ### Read from the video capture ###
         flag, frame = input_stream.read()
         if not flag:
             break
         key_pressed = waitKey(60)
-        
+
         ### Pre-process the image as needed ###
         preprocessed_frame = preprocessing(frame, input_shape)
-        
+
         ### Start asynchronous inference for specified request ###
         infer_network.exec_net(preprocessed_frame, 0)
-        
+
         ### Wait for the result ###
         # Paramater is request number not wait time
         status = infer_network.wait(0)
@@ -128,12 +131,12 @@ def infer_on_stream(args, client):
         ### TODO: Send the frame to the FFMPEG server ###
 
         ### Write an output image if `single_image_mode` ###
-        imwrite('out/output.png', frame)
+        # imwrite('out/output.png', frame)
 
     # Break if escape key pressed
         if key_pressed == 27:
             break
-        
+
     # Release the out writer, capture, and destroy any OpenCV windows
     out.release()
     input_stream.release()
