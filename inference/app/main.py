@@ -29,36 +29,12 @@ import socket
 import json
 from cv2 import VideoCapture, VideoWriter, VideoWriter_fourcc, waitKey, imwrite, destroyAllWindows
 import logging as log
-from argparse import ArgumentParser
+
+# Services 
+from arg import build_argparser
 from inference import Network
-from mqtt_service import connect_mqtt
-from processing_service import preprocessing, draw_boxes
-def build_argparser():
-    """
-    Parse command line arguments.
-
-    :return: command line arguments
-    """
-    parser = ArgumentParser()
-    parser.add_argument("-m", "--model", required=True, type=str,
-                        help="Path to an xml file with a trained model.")
-    parser.add_argument("-i", "--input", required=True, type=str,
-                        help="Path to image or video file")
-    # parser.add_argument("-l", "--cpu_extension", required=False, type=str,
-    #                     default=None,
-    #                     help="MKLDNN (CPU)-targeted custom layers."
-    #                          "Absolute path to a shared library with the"
-    #                          "kernels impl.")
-    # parser.add_argument("-d", "--device", type=str, default="CPU",
-    #                     help="Specify the target device to infer on: "
-    #                          "CPU, GPU, FPGA or MYRIAD is acceptable. Sample "
-    #                          "will look for a suitable plugin for device "
-    #                          "specified (CPU by default)")
-    # parser.add_argument("-pt", "--prob_threshold", type=float, default=0.5,
-    #                     help="Probability threshold for detections filtering"
-    #                     "(0.5 by default)")
-    return parser
-
+from mqtt import connect_mqtt
+from processing import preprocessing, draw_boxes
 
 def infer_on_stream(args, client):
     """
@@ -86,7 +62,7 @@ def infer_on_stream(args, client):
 
     # Out stream setup
     fourcc = VideoWriter_fourcc(*'mp4v')
-    frames = 60
+    frames = 24
     # Grab the shape of the input, since it's requiered for cv.VideoWriter
     # without using it cv gets a buffer size error and crashes
     width = int(input_stream.get(3))
@@ -120,6 +96,8 @@ def infer_on_stream(args, client):
             drawn_frame = draw_boxes(frame,
                                      output_shape, args, width, height)
             out.write(drawn_frame)
+            sys.stdout.buffer.write(drawn_frame)
+            sys.stdout.flush()
             
         ### TODO: Extract any desired stats from the results ###
 
