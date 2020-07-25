@@ -73,9 +73,10 @@ def infer_on_stream(args, client):
     infer_network = Network()
     # Set Probability threshold for detections
     # prob_threshold = args.prob_threshold
-
+    
     ### Load the model through `infer_network` ###
     infer_network.load_model(args.model)
+    
     # Get input shape
     input_shape = infer_network.get_input_shape()
 
@@ -90,19 +91,22 @@ def infer_on_stream(args, client):
     # Set out fourcc and out stream
     fourcc = VideoWriter_fourcc(*"mp4v")
     out = VideoWriter('./out/out.mp4', fourcc, 30, (width, height))
+    
     ### Loop until stream is over ###
     while input_stream.isOpened():
+        
         ### Read from the video capture ###
         flag, frame = input_stream.read()
         if not flag:
             break
         key_pressed = waitKey(60)
-        print('frame', frame)
+        
         ### Pre-process the image as needed ###
         preprocessed_frame = preprocessing(frame, input_shape)
+        
         ### Start asynchronous inference for specified request ###
         infer_network.exec_net(preprocessed_frame, 0)
-
+        
         ### Wait for the result ###
         # Paramater is request number not wait time
         status = infer_network.wait(0)
@@ -110,11 +114,10 @@ def infer_on_stream(args, client):
         ### Get the results of the inference request ###
         if status == 0:
             output_shape = infer_network.get_output(0)
-            print('output_shape ::::', output_shape)
-            drawn_frame = draw_boxes(preprocessed_frame,
+            drawn_frame = draw_boxes(frame,
                                      output_shape, args, width, height)
             out.write(drawn_frame)
-            print('Inference output shape :: ', output_shape)
+            
         ### TODO: Extract any desired stats from the results ###
 
         ### TODO: Calculate and send relevant information on ###
@@ -123,13 +126,14 @@ def infer_on_stream(args, client):
         ### Topic "person/duration": key of "duration" ###
 
         ### TODO: Send the frame to the FFMPEG server ###
-        imwrite('out/output.png', frame)
 
-        ### TODO: Write an output image if `single_image_mode` ###
+        ### Write an output image if `single_image_mode` ###
+        imwrite('out/output.png', frame)
 
     # Break if escape key pressed
         if key_pressed == 27:
             break
+        
     # Release the out writer, capture, and destroy any OpenCV windows
     out.release()
     input_stream.release()
@@ -139,7 +143,6 @@ def infer_on_stream(args, client):
 def main():
     """
     Load the network and parse the output.
-
     :return: None
     """
     # Grab command line args
