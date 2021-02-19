@@ -1,4 +1,4 @@
-# Deploy a People Counter App at the Edge
+# Deploy a People Counter App at the Edge [WIP]
 
 | Details               |                   |
 | --------------------- | ----------------- |
@@ -55,3 +55,7 @@ Accurate port mapping, port exposing, and learning about how to listen to ports 
 I still need to automate the Docker resource cleanup, but this project has been an eye opener on how important that is.
 
 Since I started the dockerisation container by container first and then focused on the orchestration I ended up with a lot of wasted disk space.
+
+## Remaining tasks
+
+* fix som
