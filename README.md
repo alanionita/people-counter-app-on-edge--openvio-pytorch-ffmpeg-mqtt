@@ -32,3 +32,4 @@ I decided early to use multiple containers to separate concerns, but this caused
 
 FFmpeg server was required for this project, but it is a deprecated feature. Luckily I managed to take advantage of Docker image versioning in order to pull the correct version of the package.
 
+How did I do it? Well I correlated the container image versi
