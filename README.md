@@ -40,4 +40,4 @@ Is this the best way? No, but it beats the hell out of trying to create a gcc im
 
 Who cam first? The ffmpeg container, or the MQTT server. It took a few tries and some serious thinking to properly settle on the right orchestration order.
 
-Also the c
+Also the container depend on each other so I made use
