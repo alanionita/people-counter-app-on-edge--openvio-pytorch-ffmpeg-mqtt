@@ -60,4 +60,5 @@ Since I started the dockerisation container by container first and then focused 
 
 - fix some issues with image frames looking distorted
 - replace ffmpeg server with an nginx solution
-- replace the inference model in order to improve inference capability and perfr
+- replace the inference model in order to improve inference capability and performance
+- improve the UI with my own design
