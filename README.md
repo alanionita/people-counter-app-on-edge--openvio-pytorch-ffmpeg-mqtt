@@ -8,7 +8,7 @@
 
 ## Description
 
-A People Counter application that use inferwas containerised in order to enable portability.
+A People Counter application that use inference to detect a person within a frame and visualises statistics from the inference
 
 ## 
 
