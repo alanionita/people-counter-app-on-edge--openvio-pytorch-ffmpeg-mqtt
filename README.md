@@ -50,6 +50,8 @@ A share network was crucial because the containers needed to talk to each other.
 
 Accurate port mapping, port exposing, and learning about how to listen to ports within a shared network were the highlight.
 
-### Clean up 
+### Clean up
 
-I still need to automate the Docker resource cleanup, but this project has been an eye ope
+I still need to automate the Docker resource cleanup, but this project has been an eye opener on how important that is.
+
+Since I started the dockerisations container by containe
