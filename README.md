@@ -32,4 +32,6 @@ I decided early to use multiple containers to separate concerns, but this caused
 
 FFmpeg server was required for this project, but it is a deprecated feature. Luckily I managed to take advantage of Docker image versioning in order to pull the correct version of the package.
 
-How did I do it? Well I correlated the container image version with the ffmpeg package version that I needed. Low and belod the image's apk registers point to those versions too, so I simply installed the package from the apk registry and got exactly the right version of ffmpeg 
+How did I do it? Well I correlated the container image version with the ffmpeg package version that I needed. Low and belod the image's apk registers point to those versions too, so I simply installed the package from the apk registry and got exactly the right version of ffmpeg I needed.
+
+Is this the best way? No, but it beats 
