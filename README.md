@@ -38,3 +38,4 @@ Is this the best way? No, but it beats the hell out of trying to create a gcc im
 
 ## Order
 
+Who cam first? The ffmpeg container, or the MQTT server. 
