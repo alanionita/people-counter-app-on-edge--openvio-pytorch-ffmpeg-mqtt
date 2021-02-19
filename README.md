@@ -30,4 +30,5 @@ I decided early to use multiple containers to separate concerns, but this caused
 
 ### ffmpeg server
 
-FFmpeg server was required for this project, but it is a deprecated feature. Luckily I managed to take advantage of Docker image versioning in order to pull the correct f
+FFmpeg server was required for this project, but it is a deprecated feature. Luckily I managed to take advantage of Docker image versioning in order to pull the correct version of the package.
+
