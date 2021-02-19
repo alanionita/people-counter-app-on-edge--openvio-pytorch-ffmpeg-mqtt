@@ -54,4 +54,4 @@ Accurate port mapping, port exposing, and learning about how to listen to ports 
 
 I still need to automate the Docker resource cleanup, but this project has been an eye opener on how important that is.
 
-Since I started the dockerisations container by containe
+Since I started the dockerisations container by container first and then focused on the orchestration I ent
