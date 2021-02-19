@@ -20,4 +20,6 @@ The main task here was the complex multi container setup, rather than the app it
 
 ## Reasoning
 
-Having never used Docker before I noticed a clear need for it here since my ultimat
+Having never used Docker before I noticed a clear need for it here since my ultimate goal was to port this app to an embedded system.
+
+The changes to the app where minima
