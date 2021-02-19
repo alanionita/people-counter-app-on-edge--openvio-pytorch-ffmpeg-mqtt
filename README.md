@@ -58,4 +58,4 @@ Since I started the dockerisation container by container first and then focused 
 
 ## Remaining tasks
 
-* fix som
+- [ ] fix some issues with
