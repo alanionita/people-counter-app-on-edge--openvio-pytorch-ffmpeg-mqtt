@@ -44,4 +44,4 @@ Also the container depend on each other so I made use of some bash scripts and h
 
 ### Network
 
-A share network was crucial because the containers needed to talk to each other. This was my first attempt at sha
+A share network was crucial because the containers needed to talk to each other. This was my first attempt at shared networks within Docker and it took a fair b
