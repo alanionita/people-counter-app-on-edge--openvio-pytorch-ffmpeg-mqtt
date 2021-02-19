@@ -30,4 +30,4 @@ I decided early to use multiple containers to separate concerns, but this caused
 
 ### ffmpeg server
 
-FF
+FFmpeg server was required for this project, but it is a deprecated feature. Luckily I managed to take advantage of Docker image versioning in order to pull the correct f
