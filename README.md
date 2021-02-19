@@ -12,8 +12,11 @@ A People Counter application that use inference to detect a person within a fram
 
 More details on the program can be found inside [PROJECT_README.md](./PROJECT_README.md)
 
-
+The main task here was the complex multi container setup, rather than the app itself.
 
 ## Docker diagram
 
 ![docker diagram](./docs/diagrams/system_diagram.png)
+
+## Reasoning
+
