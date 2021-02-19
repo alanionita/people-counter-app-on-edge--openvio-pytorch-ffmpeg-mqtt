@@ -8,11 +8,9 @@
 
 ## Description
 
-A People Counter application that was containerised in
+A People Counter application that use inferwas containerised in order to enable portability.
 
-## How it Works
-
-Details for ths
+## 
 
 ![architectural diagram](./docs/images/arch_diagram.png)
 
