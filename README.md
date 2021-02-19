@@ -8,9 +8,9 @@
 
 ## Description
 
-A People Counter application that use inference to detect a person within a frame and visualises statistics from the inference
+A People Counter application that use inference to detect a person within a frame and visualises statistics from the inference.
 
-## 
+## Appl
 
 ![architectural diagram](./docs/images/arch_diagram.png)
 
