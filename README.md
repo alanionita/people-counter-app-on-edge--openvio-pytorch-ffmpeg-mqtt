@@ -28,7 +28,7 @@ I decided early to use multiple containers to separate concerns, but this caused
 
 ## Challenges and problems
 
-### ffmpeg server
+### ffmpeg server deprecation
 
 FFmpeg server was required for this project, but it is a deprecated feature. Luckily I managed to take advantage of Docker image versioning in order to pull the correct version of the package.
 
