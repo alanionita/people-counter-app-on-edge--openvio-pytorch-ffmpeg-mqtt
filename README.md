@@ -6,9 +6,9 @@
 
 ![people-counter-python](./docs/images/people-counter-image.png)
 
-## What it Does
+## Description
 
-A people counter applications, that was
+A People Counter application that was containerised in
 
 ## How it Works
 
