@@ -44,4 +44,6 @@ Also the container depend on each other so I made use of some bash scripts and h
 
 ### Network
 
-A share network was crucial because the containers needed to talk to each other. This was my first attempt at shared networks within Docker and it took a fair bit of research before settling on the existing so
+A share network was crucial because the containers needed to talk to each other. This was my first attempt at shared networks within Docker and it took a fair bit of research before settling on the existing solution.
+
+Accurate port ma
