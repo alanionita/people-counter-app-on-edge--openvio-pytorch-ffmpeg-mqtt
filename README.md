@@ -58,4 +58,6 @@ Since I started the dockerisation container by container first and then focused 
 
 ## Remaining tasks
 
-- [ ] fix some issues with image frames looking distor
+- fix some issues with image frames looking distorted
+- replace ffmpeg server with an nginx solution
+- replace the inference model in order to improve inference capability and perfr
