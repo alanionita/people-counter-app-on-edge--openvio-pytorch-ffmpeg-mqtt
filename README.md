@@ -36,8 +36,12 @@ How did I do it? Well I correlated the container image version with the ffmpeg p
 
 Is this the best way? No, but it beats the hell out of trying to create a gcc image, downloading an old binary and building that binary in the container. I actually pursued this route and ended up with a really long start time for the container which was fine in isolation, but impossible to deal with in the context of the orchestration.
 
-## Order and dependencies
+### Order and dependencies
 
 Who cam first? The ffmpeg container, or the MQTT server. It took a few tries and some serious thinking to properly settle on the right orchestration order.
 
-Also the container depend on each other so I made use
+Also the container depend on each other so I made use of some bash scripts and health checks in order to make sure that dependency containers are up before starting a dependent container.
+
+### Network
+
+A share network was crucial because the containers 
