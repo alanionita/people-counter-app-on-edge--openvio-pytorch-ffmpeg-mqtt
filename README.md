@@ -52,4 +52,4 @@ Accurate port mapping, port exposing, and learning about how to listen to ports 
 
 ### Clean up 
 
-I still need to automate the Docker resource cleanup, 
+I still need to automate the Docker resource cleanup, but this project has been an eye ope
