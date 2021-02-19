@@ -24,4 +24,10 @@ Having never used Docker before I noticed a clear need for it here since my ulti
 
 The changes to the app where minimal and 80% of work went into the Dockerisation of the system.
 
-I decided early to use multiple containers to separate concerns, but this caused forced me to learn more about distributed systems archite
+I decided early to use multiple containers to separate concerns, but this caused forced me to learn more about distributed systems architecture and how to properly organise the containers in a way that wouldn't break system dependencies.
+
+## Challenges and problems
+
+### ffmpeg server
+
+FF
