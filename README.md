@@ -34,4 +34,4 @@ FFmpeg server was required for this project, but it is a deprecated feature. Luc
 
 How did I do it? Well I correlated the container image version with the ffmpeg package version that I needed. Low and belod the image's apk registers point to those versions too, so I simply installed the package from the apk registry and got exactly the right version of ffmpeg I needed.
 
-Is this the best way? No, but it beats 
+Is this the best way? No, but it beats the hell out of trying to create 
