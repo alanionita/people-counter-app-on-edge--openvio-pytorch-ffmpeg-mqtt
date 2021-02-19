@@ -10,7 +10,7 @@
 
 A People Counter application that use inference to detect a person within a frame and visualises statistics from the inference.
 
-More details on the 
+More details on the program can be found inside [PROJECT_README.md](./PROJECT_README.md)
 
 ## Application Diagram
 
